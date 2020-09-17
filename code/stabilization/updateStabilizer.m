@@ -32,6 +32,16 @@ function stabilizedFA = updateStabilizer(baseFA, y, varargin)
 %
 % Author: William Bishop, bishopw@janelia.hhmi.org
 
+if ~iscell(y)
+    % then it must be from Python, a 3D array
+    [trials, channels, time] = size(y);
+    new_y = cell([1,trials]);
+    for ii = 1:trials
+        new_y{ii} = squeeze(y(ii, :, :));
+    end 
+    y = new_y;
+end 
+
 N_FA_RESTARTS = 5;
 MAX_N_ITS = 100000; 
 LL_DIFF_THRESH = .00001; 
