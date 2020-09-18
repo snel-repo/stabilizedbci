@@ -38,12 +38,22 @@ function fa = fitBaseStabilizer(y, nLatents, varargin)
 
 if ~iscell(y)
     % then it must be from Python, a 3D array
-    [trials, channels, time] = size(y);
-    new_y = cell([1,trials]);
-    for ii = 1:trials
-        new_y{ii} = squeeze(y(ii, :, :));
-    end 
-    y = new_y;
+    if length(size(y)) < 3
+        [channels, time] = size(y);
+        trials = 1;
+        new_y = cell([1,trials]);
+        for ii = 1:trials
+            new_y{ii} = squeeze(y(:, :));
+        end 
+        y = new_y;
+    else
+        [trials, channels, time] = size(y);
+        new_y = cell([1,trials]);
+        for ii = 1:trials
+            new_y{ii} = squeeze(y(ii, :, :));
+        end 
+        y = new_y;
+    end
 end 
 
 N_FA_RESTARTS = 5;
